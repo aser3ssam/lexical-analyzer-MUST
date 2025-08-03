@@ -27,6 +27,8 @@
     }
     .logo img {
       max-width: 180px;
+      border-radius: 50%;
+      border: 2px solid #ff00ff;
     }
     h1 {
       text-align: center;
@@ -118,20 +120,25 @@
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script>
   particlesJS("particles-js", {
-    ...
     "particles": {
-      "number": {"value": 60},
-      "color": {"value": "#ff00ff"},
-      "shape": {"type": "circle"},
-      "opacity": {"value": 0.5},
-      "size": {"value": 2},
-      "line_linked": {"enable": true, "distance": 150, "color": "#00ffe0", "opacity": 0.4, "width": 1},
-      "move": {"enable": true, "speed": 2}
+      "number": { "value": 60 },
+      "color": { "value": "#ff00ff" },
+      "shape": { "type": "circle" },
+      "opacity": { "value": 0.5 },
+      "size": { "value": 2 },
+      "line_linked": {
+        "enable": true,
+        "distance": 150,
+        "color": "#00ffe0",
+        "opacity": 0.4,
+        "width": 1
+      },
+      "move": { "enable": true, "speed": 2 }
     },
     "interactivity": {
       "events": {
-        "onhover": {"enable": true, "mode": "repulse"},
-        "onclick": {"enable": true, "mode": "push"}
+        "onhover": { "enable": true, "mode": "repulse" },
+        "onclick": { "enable": true, "mode": "push" }
       }
     }
   });
@@ -179,7 +186,7 @@ Next token is: -1, Next lexeme is EOF`;
     if (i < output.length) {
       terminal.innerHTML = output.slice(0, i++) + '<span class="cursor"></span>';
       sound.currentTime = 0;
-      sound.play().catch(() => {});  // non-blocking play
+      sound.play().catch(() => {});
       interval = setTimeout(typeStep, 25);
     } else {
       started = false;
