@@ -2,84 +2,140 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Lexical Analyzer – Aser Essam</title>
+  <title>Lexical Analyzer</title>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
-    body {
+    html, body {
+      margin: 0;
+      padding: 0;
       background: #0d0d0d;
-      color: #00f5d4;
       font-family: 'Share Tech Mono', monospace;
-      padding: 40px;
-      max-width: 960px;
-      margin: auto;
+      overflow-x: hidden;
+      color: #00ffe0;
     }
-    h1, h2 {
-      color: #ff4ddb;
-      text-shadow: 0 0 6px #ff4ddb;
-    }
-    .banner {
+    canvas#particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      max-height: 320px;
-      object-fit: cover;
-      border: 2px solid #ff4ddb;
+      height: 100%;
+      z-index: -1;
+    }
+    .logo {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .logo img {
+      max-width: 180px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 32px;
+      color: #ff4ddb;
+      text-shadow: 0 0 5px #ff4ddb;
       margin-bottom: 30px;
-      box-shadow: 0 0 15px #ff4ddb;
     }
     .terminal {
+      margin: 0 auto;
+      width: 80%;
       background: #111;
-      border-left: 6px solid #f0a500;
+      border-left: 6px solid #0ff;
       padding: 20px;
       font-size: 16px;
-      color: #00ff88;
+      color: #0f0;
       white-space: pre-wrap;
       box-shadow: 0 0 12px #000;
-      margin-top: 20px;
-      min-height: 180px;
+      max-height: 300px;
+      overflow-y: auto;
     }
     .cursor {
       display: inline-block;
       width: 10px;
-      background-color: #00ff88;
-      animation: blink 1s infinite;
+      height: 16px;
+      background: #0f0;
+      animation: blink 1s step-start 0s infinite;
     }
     @keyframes blink {
-      0%, 100% { opacity: 1; }
       50% { opacity: 0; }
     }
-    .launch-btn {
+    .button-wrapper {
+      text-align: center;
+      margin: 20px;
+    }
+    .launch-btn, .stop-btn {
       background: #ff00aa;
       color: black;
       padding: 10px 25px;
-      font-size: 16px;
-      border: none;
+      margin: 10px;
       font-weight: bold;
+      border: none;
       cursor: pointer;
       box-shadow: 0 0 10px #ff00aa;
-      margin-top: 10px;
     }
-    .launch-btn:hover {
+    .launch-btn:hover, .stop-btn:hover {
       background: #ff4ddb;
-      box-shadow: 0 0 15px #ff4ddb;
+    }
+    .footer-info {
+      text-align: right;
+      padding: 10px 20px;
+      font-size: 14px;
+      color: #777;
+      position: fixed;
+      bottom: 0;
+      right: 0;
+    }
+    @media (max-width: 600px) {
+      .terminal { width: 90%; font-size: 14px; }
+      .footer-info { font-size: 12px; }
     }
   </style>
 </head>
 <body>
 
-  <img src="docs/banner.jpg" alt="Banner" class="banner" />
+<canvas id="particles-js"></canvas>
 
-  <h1>Lexical Analyzer – Aser Essam</h1>
-  <p><strong>Language:</strong> C<br>
-     <strong>License:</strong> MIT<br>
-     <strong>Theme:</strong> Cyberpunk Mode 🦾</p>
+<div class="logo">
+  <img src="docs/logo.png" alt="Logo">
+</div>
 
+<h1>Lexical Analyzer</h1>
+
+<div class="button-wrapper">
   <button class="launch-btn" onclick="startTyping()">Launch Analyzer</button>
+  <button class="stop-btn" onclick="stopTyping()">Stop Analyzer</button>
+</div>
 
-  <div class="terminal" id="terminal"></div>
+<div class="terminal" id="terminal"></div>
 
-  <audio id="typeSound" src="https://freesound.org/data/previews/341/341695_6262640-lq.mp3" preload="auto"></audio>
+<div class="footer-info">
+  Aser Essam<br>
+  Misr University for Science and Technology<br>
+  Language: C
+</div>
 
-  <script>
-    const output = `Next token is: 11, Next lexeme is total_sum
+<audio id="type-sound" src="type.mp3" preload="auto"></audio>
+
+<script src="particle.js"></script>
+<script>
+  particlesJS("particles-js", {
+    "particles": {
+      "number": {"value": 60},
+      "color": {"value": "#ff00ff"},
+      "shape": {"type": "circle"},
+      "opacity": {"value": 0.5},
+      "size": {"value": 2},
+      "line_linked": {"enable": true, "distance": 150, "color": "#00ffe0", "opacity": 0.4, "width": 1},
+      "move": {"enable": true, "speed": 2}
+    },
+    "interactivity": {
+      "events": {
+        "onhover": {"enable": true, "mode": "repulse"},
+        "onclick": {"enable": true, "mode": "push"}
+      }
+    }
+  });
+
+  const output = `Next token is: 11, Next lexeme is total_sum
 Next token is: 20, Next lexeme is =
 Next token is: 25, Next lexeme is (
 Next token is: 11, Next lexeme is val1
@@ -106,30 +162,35 @@ Next token is: 23, Next lexeme is *
 Next token is: 10, Next lexeme is 2
 Next token is: -1, Next lexeme is EOF`;
 
-    let i = 0;
-    let started = false;
-    const terminal = document.getElementById("terminal");
-    const typeSound = document.getElementById("typeSound");
+  let i = 0, started = false, interval;
+  const terminal = document.getElementById("terminal");
+  const sound = document.getElementById("type-sound");
 
-    function startTyping() {
-      if (started) return;
-      started = true;
-      terminal.innerHTML = "";
-      i = 0;
-      type();
-    }
+  function startTyping() {
+    if (started) return;
+    started = true;
+    i = 0;
+    terminal.innerHTML = '';
+    typeStep();
+  }
 
-    function type() {
-      if (i < output.length) {
-        terminal.innerHTML = output.slice(0, i++) + '<span class="cursor"></span>';
-        typeSound.currentTime = 0;
-        typeSound.play();
-        setTimeout(type, 25);
-      } else {
-        terminal.innerHTML = output;
-      }
+  function typeStep() {
+    if (i < output.length) {
+      terminal.innerHTML = output.slice(0, i++) + '<span class="cursor"></span>';
+      sound.currentTime = 0;
+      sound.play().catch(() => {});  // non-blocking play
+      interval = setTimeout(typeStep, 25);
+    } else {
+      started = false;
     }
-  </script>
+  }
+
+  function stopTyping() {
+    clearTimeout(interval);
+    terminal.innerHTML = '';
+    started = false;
+  }
+</script>
 
 </body>
 </html>
