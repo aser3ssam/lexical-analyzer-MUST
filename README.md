@@ -1,3 +1,5 @@
+![banner](docs/banner.jpg)
+
 # Lexical Analyzer – Aser Essam
 
 This project is a lexical analyzer that processes arithmetic expressions and outputs token classifications.
