@@ -1,6 +1,3 @@
-> 🌓 Theme: [Cyberpunk Dark 🔦] — best viewed in GitHub dark mode
-
-
 ![banner](docs/banner.jpg)
 
 # ⚡ Lexical Analyzer – Aser Essam
