@@ -1,36 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Lexical Analyzer - Aser Essam</title>
+  <meta charset="UTF-8" />
+  <title>Lexical Analyzer – Aser Essam</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     body {
-      background: #0f0f0f;
+      background: #0d0d0d;
       color: #00f5d4;
-      font-family: monospace;
+      font-family: 'Share Tech Mono', monospace;
       padding: 40px;
+      max-width: 960px;
+      margin: auto;
     }
-    a { color: #ff66c4; }
-    h1, h2 { color: #f72585; }
-    pre {
+    h1, h2 {
+      color: #ff4ddb;
+      text-shadow: 0 0 6px #ff4ddb;
+    }
+    .banner {
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      border: 2px solid #ff4ddb;
+      margin-bottom: 30px;
+      box-shadow: 0 0 15px #ff4ddb;
+    }
+    .terminal {
       background: #111;
-      padding: 10px;
-      border-left: 3px solid #f0a500;
+      border-left: 6px solid #f0a500;
+      padding: 20px;
+      font-size: 16px;
+      color: #00ff88;
+      white-space: pre-wrap;
+      box-shadow: 0 0 12px #000;
+      margin-top: 20px;
+      min-height: 180px;
+    }
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      background-color: #00ff88;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .launch-btn {
+      background: #ff00aa;
+      color: black;
+      padding: 10px 25px;
+      font-size: 16px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 10px #ff00aa;
+      margin-top: 10px;
+    }
+    .launch-btn:hover {
+      background: #ff4ddb;
+      box-shadow: 0 0 15px #ff4ddb;
     }
   </style>
 </head>
 <body>
+
+  <img src="docs/banner.jpg" alt="Banner" class="banner" />
+
   <h1>Lexical Analyzer – Aser Essam</h1>
   <p><strong>Language:</strong> C<br>
      <strong>License:</strong> MIT<br>
-     <strong>Mode:</strong> <span style="color:#f0a500">Cyberpunk</span></p>
+     <strong>Theme:</strong> Cyberpunk Mode 🦾</p>
 
-  <h2>Sample Execution</h2>
-  <pre>
-Next token is: 11, Next lexeme is total_sum
+  <button class="launch-btn" onclick="startTyping()">Launch Analyzer</button>
+
+  <div class="terminal" id="terminal"></div>
+
+  <audio id="typeSound" src="https://freesound.org/data/previews/341/341695_6262640-lq.mp3" preload="auto"></audio>
+
+  <script>
+    const output = `Next token is: 11, Next lexeme is total_sum
 Next token is: 20, Next lexeme is =
-...
-Next token is: -1, Next lexeme is EOF
-  </pre>
+Next token is: 25, Next lexeme is (
+Next token is: 11, Next lexeme is val1
+Next token is: 21, Next lexeme is +
+Next token is: 10, Next lexeme is 25
+Next token is: 26, Next lexeme is )
+Next token is: 23, Next lexeme is *
+Next token is: 25, Next lexeme is (
+Next token is: 11, Next lexeme is var2
+Next token is: 22, Next lexeme is -
+Next token is: 10, Next lexeme is 3
+Next token is: 26, Next lexeme is )
+Next token is: 24, Next lexeme is /
+Next token is: 10, Next lexeme is 5
+Next token is: 21, Next lexeme is +
+Next token is: 11, Next lexeme is temp123
+Next token is: 22, Next lexeme is -
+Next token is: 25, Next lexeme is (
+Next token is: 10, Next lexeme is 7
+Next token is: 21, Next lexeme is +
+Next token is: 11, Next lexeme is counter
+Next token is: 26, Next lexeme is )
+Next token is: 23, Next lexeme is *
+Next token is: 10, Next lexeme is 2
+Next token is: -1, Next lexeme is EOF`;
+
+    let i = 0;
+    let started = false;
+    const terminal = document.getElementById("terminal");
+    const typeSound = document.getElementById("typeSound");
+
+    function startTyping() {
+      if (started) return;
+      started = true;
+      terminal.innerHTML = "";
+      i = 0;
+      type();
+    }
+
+    function type() {
+      if (i < output.length) {
+        terminal.innerHTML = output.slice(0, i++) + '<span class="cursor"></span>';
+        typeSound.currentTime = 0;
+        typeSound.play();
+        setTimeout(type, 25);
+      } else {
+        terminal.innerHTML = output;
+      }
+    }
+  </script>
+
 </body>
 </html>
